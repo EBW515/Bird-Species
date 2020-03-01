@@ -1,8 +1,8 @@
 
 ---
 title: "Activity: Bird Species"
-author: "Your Names Here"
-date: ""
+author: "eric weah"
+date: "3/1/2020"
 output: html_notebook
 ---
 
