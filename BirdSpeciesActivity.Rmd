@@ -96,7 +96,7 @@ view(Corrected)
 ```
 a.)Species Name
 
-b.)variables added are month and day plus the new variable which consist of the corrected bird names
+b.)variables added are month,day, and the new variable which consist of the corrected bird names
 
 ### Step 3
 
@@ -113,17 +113,17 @@ Count <-
 head(10)
 
 # a hint on p.164 recommends displaying the top 10 species to choose our threshold
-topSixSpec <-
-  CountCorrect %>% 
-  head(n = 6) %>% 
+top <-
+  Count%>% 
+  head(n = 10) %>% 
   .$Species
-topSixSpec
+top
 
 
 # define a sightings threshold; produce a table with only birds belonging to major species
 Majors <-
   Corrected %>% 
-  filter(Species %in% topSixSpec)
+  filter(Species %in% top)
 
 ```
 
@@ -134,9 +134,10 @@ We now want to produce a month-by-month count for each of the major species, and
 ```{r}
 # prepare glyph-ready data table called `ByMonth`
 
-
-
-
+ByMonth <- Majors %>%
+  group_by(Species, Month) %>%
+  summarise(count = n()) %>%
+  arrange(Month)
 ```
 
 Now, using `barGraphHelper()` in the console, we can configure a reasonable graph and choose "show expression" to get `ggplot2` that can be embedded in our report.
@@ -145,21 +146,17 @@ Now, using `barGraphHelper()` in the console, we can configure a reasonable grap
 
 ```{r}
 # ggplot command
-
-
+ggplot(data=ByMonth,aes(x=Species,y=count ))+geom_bar(stat='identity',position='stack', width=.9) 
 
 ```
 
 According to the graph, we can answer the questions posed:
 
 ##### 1. Which species are present year-round?  
-
-American Goldfinch
-Black-capped chickadee
+year round: American Goldfinch, Black-capped chickadee
 
 ##### 2. Which species are migratory, that is, primarily present in one or two seasons?
-Lincolns Sparrow
-Slate-colored Junco
+Migratory: Lincolns Sparrow, Slate-colored Junco
 
 
 
@@ -174,12 +171,15 @@ Tree swallow: March
 
 
 ##### 4. Which major species are seen in good numbers for at least 6 months of the year?
-American Goldfinch
-Black-capped Chickadee
-Tree swallow
+major species : American Goldfinch, Black-capped,Chickadee,Tree swallow
 
 
 ```{r}
+Majors %>% 
+  ggplot(aes(x = Month)) +
+  geom_bar() +
+  facet_wrap(~ Species) +
+  theme(axis.text.x=element_text(angle=45,hjust=1))
 
 ```
 
